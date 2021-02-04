@@ -1,0 +1,45 @@
+{
+  "name": "action-parser",
+  "version": "1.0.0",
+  "description": "Parse the issue body",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standard --fix",
+    "pack": "ncc build index.js -o dist",
+    "test": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rft/sdlc-appmanagement"
+  },
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "JavaScript"
+  ],
+  "author": "GitHub",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rft/sdlc-appmanagement"
+  },
+  "homepage": "https://github.com/rft/sdlc-appmanagement",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^2.1.1",
+    "yaml": "^1.9.2"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.20.5",
+    "eslint": "^6.3.0",
+    "jest": "^24.9.0",
+    "standard": "^16.0.3"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ],
+    "ignore": [
+      "dist/"
+    ]
+  }
+}

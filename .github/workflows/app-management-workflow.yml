@@ -1,0 +1,20 @@
+name: Parse issue
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  app-management:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    steps:
+      - name: Checkout the repository to run the automations
+        id: checkout_repo
+        uses: actions/checkout@v2
+
+      - name: Parse the issue submitted
+        id: parser
+        uses: ./actions/app-management
+        with:
+          admin_token: ${{ secrets.GITHUB_TOKEN }}
