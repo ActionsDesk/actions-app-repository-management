@@ -1,20 +1,9 @@
-name: 'Capability parser'
-description: 'Parses the yaml body of the issue'
+name: 'GitHub App repository permission parser'
+description: 'Parses the yaml body of the issue and adds repositories to GitHub app permissions'
 inputs:
   admin_token:
     description: Admin token with access to the organization
     required: true
-outputs:
-  action:
-    description: The name of the command
-  name:
-    description: Name of the capability
-  description:
-    description: Description of the capability
-  owners:
-    description: Owners of the capability
-  maintainers:
-    description: Maintainers of the capability
 
 runs:
   using: 'node12'

@@ -6,15 +6,12 @@ on:
 jobs:
   app-management:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
-      - name: Checkout the repository to run the automations
-        id: checkout_repo
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Parse the issue submitted
-        id: parser
+        id: issue_parser
         uses: ./actions/app-management
         with:
-          admin_token: ${{ secrets.GITHUB_TOKEN }}
+          admin_token: ${{ secrets.PAT }}
