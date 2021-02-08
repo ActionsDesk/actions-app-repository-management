@@ -9,6 +9,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        path: actions
 
       - name: Parse the issue submitted
         id: issue_parser

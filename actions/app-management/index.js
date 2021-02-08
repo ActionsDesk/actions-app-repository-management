@@ -56,7 +56,6 @@ function validateSettings (settings) {
 }
 
 async function run () {
-
   const { context } = github
   const orgName = context.payload.organization.login
   const adminToken = core.getInput('admin_token')
