@@ -1,0 +1,12 @@
+{
+  "GitHubApps": [
+    {
+      "name": "test-1",
+      "id": 1
+    },
+    {
+      "name": "test-2",
+      "id": 2
+    }
+  ]
+}

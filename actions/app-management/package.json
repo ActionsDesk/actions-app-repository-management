@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "standard --fix",
     "pack": "ncc build index.js -o dist",
-    "test": "standard"
+    "test": "jest *.test.js && standard"
   },
   "repository": {
     "type": "git",
@@ -32,7 +32,8 @@
     "@zeit/ncc": "^0.20.5",
     "eslint": "^6.3.0",
     "jest": "^24.9.0",
-    "standard": "^16.0.3"
+    "standard": "^16.0.3",
+    "nock": "^13.0.4"
   },
   "standard": {
     "env": [
@@ -40,6 +41,12 @@
     ],
     "ignore": [
       "dist/"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/?(*.)+(spec|test).[j]s?(x)"
     ]
   }
 }

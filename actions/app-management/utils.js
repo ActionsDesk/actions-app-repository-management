@@ -1,24 +1,24 @@
 // Reports an error on the issue
-async function reportError (github, core, octokit, message) {
+async function reportError (context, core, octokit, message) {
   core.debug('=========== Context ===========')
-  core.debug(JSON.stringify(github.context))
+  core.debug(JSON.stringify(context))
   core.debug('=========== Context ===========')
 
   // Set the error
   core.setFailed(message)
-  await commentAndCloseIssue(github, octokit, message)
+  await commentAndCloseIssue(context, octokit, message)
 }
 
 // Comments and close the issue
-async function commentAndCloseIssue (github, octokit, message) {
-  await commentIssue(github, octokit, message)
-  await closeIssue(github, octokit, message)
+async function commentAndCloseIssue (context, octokit, message) {
+  await commentIssue(context, octokit, message)
+  await closeIssue(context, octokit, message)
 }
 
 // Adds a comment to the issue
-async function commentIssue (github, octokit, message) {
+async function commentIssue (context, octokit, message) {
   // Send the message
-  const payload = github.context.payload
+  const payload = context.payload
   const owner = payload.repository.owner.login
   const repo = payload.repository.name
   const issueNumber = payload.issue.number
@@ -31,9 +31,9 @@ async function commentIssue (github, octokit, message) {
 }
 
 // Closes and locks the issue
-async function closeIssue (github, octokit) {
+async function closeIssue (context, octokit) {
   // Send the message
-  const payload = github.context.payload
+  const payload = context.payload
   const owner = payload.repository.owner.login
   const repo = payload.repository.name
   const issueNumber = payload.issue.number
