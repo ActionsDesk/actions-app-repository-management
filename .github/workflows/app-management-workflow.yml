@@ -16,3 +16,4 @@ jobs:
         uses: ./actions/app-management
         with:
           admin_token: ${{ secrets.PAT }}
+          error_tag_team: refinitiv-org/test

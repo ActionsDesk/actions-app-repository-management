@@ -47,7 +47,7 @@
     "closed_at":null,
     "author_association":"CONTRIBUTOR",
     "active_lock_reason":null,
-    "body":"Repository Name: \r\n- refinitiv-docs\r\n- \r\nGitHub Application: \r\n- droidpl-RFT-OAuth-Test\r\n\r\n#### Instructions available at [README.md](https://github.com/rft-dev/sdlc-appmanagement/blob/master/README.md#instructions)\r\n",
+    "body":"Repository Name: \r\n- refinitiv-docs\r\n \r\nGitHub Application: \r\n- droidpl-RFT-OAuth-Test\r\n\r\n#### Instructions available at [README.md](https://github.com/rft-dev/sdlc-appmanagement/blob/master/README.md#instructions)\r\n",
     "performed_via_github_app":null
   },
   "repository":{
