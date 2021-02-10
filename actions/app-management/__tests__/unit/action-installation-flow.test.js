@@ -93,7 +93,7 @@ GitHub Application:
     mockGitHubApps(mockCallback)
     mockInstallations(mockCallback)
     mockRepositories(mockCallback)
-    replyGitHubDeleteResponse(`/user/installations/1/repositories/335909243`, (_, input) => {
+    replyGitHubDeleteResponse('/user/installations/1/repositories/335909243', (_, input) => {
       mockCallback()
     })
     replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
