@@ -68,10 +68,12 @@ async function validateApps (applications, knownApps, orgName, context, octokit)
     acc[installation.app_slug] = installation
     return acc
   }, {})
+  core.info(`Installed apps - ${JSON.stringify(installedAppMap)}`)
   const appDetails = {}
   for (const application of applications) {
     for (const knownApp of knownApps.GitHubApps) {
       const isValidApp = installedAppMap[application] && installedAppMap[application].repository_selection === 'partial'
+      core.info(`App is installed and valid - ${isValidApp} ${knownApp.name.localeCompare(application, undefined, { sensitivity: 'base' }) === 0}`)
       if (knownApp.name.localeCompare(application, undefined, { sensitivity: 'base' }) === 0 && isValidApp) {
         appDetails[application] = installedAppMap[application].id
         break
@@ -82,6 +84,7 @@ async function validateApps (applications, knownApps, orgName, context, octokit)
       await utils.commentIssue(context, octokit, `⚠️ ${application} is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories`)
     }
   }
+  core.info(`Final app details - ${JSON.stringify(appDetails)}`)
   return appDetails
 }
 
