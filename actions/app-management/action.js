@@ -83,7 +83,7 @@ async function validateApps (applications, knownApps, orgName, context, octokit)
     }
 
     if (!(appMap in appDetails)) {
-      await utils.commentIssue(context, octokit, `⚠️ ${application} is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories`)
+      await utils.commentIssue(context, octokit, `⚠️ **${application}** is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories`)
     }
   }
   core.info(`Final app details - ${JSON.stringify(appDetails)}`)
@@ -106,10 +106,10 @@ async function validateRepositories (repositories, orgName, author, context, oct
       }
     } catch (error) {
       if (error.status === 404) {
-        await utils.commentIssue(context, octokit, `${repositoryName} is not a valid repository. Please ensure that you provide a valid repository name.`)
+        await utils.commentIssue(context, octokit, `**${repositoryName}** is not a valid repository. Please ensure that you provide a valid repository name.`)
         continue
       }
-      await utils.commentIssue(context, octokit, `Error getting details for repository ${repositoryName}.`)
+      await utils.commentIssue(context, octokit, `Error getting details for repository **${repositoryName}**.`)
       continue
     }
 
@@ -121,11 +121,11 @@ async function validateRepositories (repositories, orgName, author, context, oct
       })
 
       if (permissions.data.permission !== 'admin') {
-        await utils.commentIssue(context, octokit, `Only repository admins can request for a repository to be added to a GitHub App. ${repositoryName} will not be processed.`)
+        await utils.commentIssue(context, octokit, `Only repository admins can request for a repository to be added to a GitHub App. **${repositoryName}** will not be processed.`)
         delete repositoryDetails[repositoryName]
       }
     } catch (error) {
-      await utils.commentIssue(context, octokit, `Error getting the repository permissions for ${repositoryName}.`)
+      await utils.commentIssue(context, octokit, `Error getting the repository permissions for **${repositoryName}**.`)
       delete repositoryDetails[repositoryName]
     }
   }
@@ -200,7 +200,7 @@ async function executeAction (context, adminToken, errorTagTeam) {
                   previews: ['machine-man']
                 }
               })
-              await utils.commentIssue(context, octokit, `${repository} has been added to the application ${application}.`)
+              await utils.commentIssue(context, octokit, `**${repository}** has been added to the application **${application}**.`)
               break
             case actions.REMOVEFROMAPP:
               await octokit.apps.removeRepoFromInstallation({
@@ -210,18 +210,21 @@ async function executeAction (context, adminToken, errorTagTeam) {
                   previews: ['machine-man']
                 }
               })
-              await utils.commentIssue(context, octokit, `${repository} has been removed from the application ${application}.`)
+              await utils.commentIssue(context, octokit, `**${repository}** has been removed from the application **${application}**.`)
               break
           }
         } catch (error) {
-          await utils.commentIssue(context, octokit, `Error configuring ${repository} with the GitHub App ${application}.`)
-          return
+          await utils.commentIssue(context, octokit, `Error configuring **${repository}** with the GitHub App **${application}**. ${error.message}`)
         }
       }
     }
     await utils.closeIssue(context, octokit)
   } catch (error) {
-    await utils.reportError(context, core, octokit, `⚠️ ${error.message}\n${error.stack} ${errorTagTeam ? `\n\ncc/ @${errorTagTeam} ` : ''} ⚠️`)
+    await utils.reportError(context, core, octokit, `⚠️ ${error.message}\n
+    \`\`\`
+    ${error.stack}
+    \`\`\`\n
+    ${errorTagTeam ? `\n\ncc/ @${errorTagTeam} ` : ''} ⚠️`)
   }
 }
 

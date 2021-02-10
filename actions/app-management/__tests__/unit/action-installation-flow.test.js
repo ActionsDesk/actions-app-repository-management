@@ -81,7 +81,7 @@ GitHub Application:
     })
     replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
       mockCallback()
-      expect(input.body).toBe('refinitiv-docs has been added to the application test-1.')
+      expect(input.body).toBe('**refinitiv-docs** has been added to the application **test-1**.')
     })
     lockedIssueValidationMock(mockCallback)
     await executeAction(context, adminToken)
@@ -110,7 +110,7 @@ GitHub Application:
     })
     replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
       mockCallback()
-      expect(input.body).toBe('refinitiv-docs has been removed from the application test-1.')
+      expect(input.body).toBe('**refinitiv-docs** has been removed from the application **test-1**.')
     })
     lockedIssueValidationMock(mockCallback)
     await executeAction(context, adminToken)

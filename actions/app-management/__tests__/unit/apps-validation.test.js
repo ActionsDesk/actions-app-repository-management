@@ -48,7 +48,7 @@ describe('GitHub apps test', () => {
     mockInstallations()
     replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
       mockCallback()
-      expect(input.body).toBe('⚠️ invalidApp is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories')
+      expect(input.body).toBe('⚠️ **invalidApp** is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories')
     })
     const validApps = await validateApps(apps, githubapps, orgName, context, octokit)
     expect(validApps).toStrictEqual({})
@@ -78,7 +78,7 @@ describe('GitHub apps test', () => {
     // mockInstallations()
     replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
       mockCallback()
-      expect(input.body).toBe('⚠️ invalidApp is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories')
+      expect(input.body).toBe('⚠️ **invalidApp** is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories')
     })
     mockInstallations()
     const validApps = await validateApps(apps, githubapps, orgName, context, octokit)
@@ -107,7 +107,7 @@ describe('GitHub apps test', () => {
     mockInstallations(mockCallback)
     replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
       mockCallback()
-      expect(input.body).toBe('⚠️ test-3 is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories')
+      expect(input.body).toBe('⚠️ **test-3** is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories')
     })
     const validApps = await validateApps(apps, githubapps, orgName, context, octokit)
     expect(validApps).toStrictEqual({})
