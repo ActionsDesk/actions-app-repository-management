@@ -6,7 +6,8 @@ const {
   replyGithubGetResponse,
   replyGithubPutResponse,
   replyGithubResponse,
-  replyGitHubDeleteResponse
+  replyGitHubDeleteResponse,
+  replyGithubPatchResponse
 } = require('../instrumentation/github-instrumentation')
 const contentsGitHubApp = require('../fixtures/mock/contents-githubapps')
 const issueOpenedMock = require('../fixtures/mock/issue-opened')
@@ -48,6 +49,16 @@ describe('GitHub apps test', () => {
     })
   }
 
+  function lockedIssueValidationMock (mockCallback) {
+    replyGithubPutResponse('/repos/refinitiv-org/rft-admin-support/issues/1/lock', (_, input) => {
+      if (mockCallback) mockCallback()
+    })
+    replyGithubPatchResponse('/repos/refinitiv-org/rft-admin-support/issues/1', (_, input) => {
+      if (mockCallback) mockCallback()
+      expect(input.state).toBe('closed')
+    })
+  }
+
   test('that the installation gets added to the repository', async () => {
     const mockCallback = jest.fn()
     const addTitle = 'Add Repository To GitHub App'
@@ -72,8 +83,9 @@ GitHub Application:
       mockCallback()
       expect(input.body).toBe('refinitiv-docs has been added to the application test-1.')
     })
+    lockedIssueValidationMock(mockCallback)
     await executeAction(context, adminToken)
-    expect(mockCallback.mock.calls.length).toBe(6)
+    expect(mockCallback.mock.calls.length).toBe(8)
   })
 
   test('that the installation gets removed from the repository', async () => {
@@ -100,7 +112,8 @@ GitHub Application:
       mockCallback()
       expect(input.body).toBe('refinitiv-docs has been removed from the application test-1.')
     })
+    lockedIssueValidationMock(mockCallback)
     await executeAction(context, adminToken)
-    expect(mockCallback.mock.calls.length).toBe(6)
+    expect(mockCallback.mock.calls.length).toBe(8)
   })
 })

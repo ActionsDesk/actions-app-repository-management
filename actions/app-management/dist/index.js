@@ -3194,7 +3194,8 @@ async function closeIssue (context, octokit) {
 module.exports = {
   commentAndCloseIssue,
   reportError,
-  commentIssue
+  commentIssue,
+  closeIssue
 }
 
 
@@ -10942,19 +10943,21 @@ async function validateApps (applications, knownApps, orgName, context, octokit)
     acc[installation.app_slug] = installation
     return acc
   }, {})
-  core.info(`Installed apps - ${JSON.stringify(installedAppMap)}`)
+
   const appDetails = {}
   for (const application of applications) {
+    const appMap = application.toLowerCase()
+
     for (const knownApp of knownApps.GitHubApps) {
-      const isValidApp = installedAppMap[application] && installedAppMap[application].repository_selection === 'partial'
+      const isValidApp = installedAppMap[appMap] && installedAppMap[appMap].repository_selection === 'selected'
       core.info(`App is installed and valid - ${isValidApp} ${knownApp.name.localeCompare(application, undefined, { sensitivity: 'base' }) === 0}`)
       if (knownApp.name.localeCompare(application, undefined, { sensitivity: 'base' }) === 0 && isValidApp) {
-        appDetails[application] = installedAppMap[application].id
+        appDetails[appMap] = installedAppMap[appMap].id
         break
       }
     }
 
-    if (!(application in appDetails)) {
+    if (!(appMap in appDetails)) {
       await utils.commentIssue(context, octokit, `⚠️ ${application} is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories`)
     }
   }
@@ -11087,9 +11090,11 @@ async function executeAction (context, adminToken, errorTagTeam) {
           }
         } catch (error) {
           await utils.commentIssue(context, octokit, `Error configuring ${repository} with the GitHub App ${application}.`)
+          return
         }
       }
     }
+    await utils.closeIssue(context, octokit)
   } catch (error) {
     await utils.reportError(context, core, octokit, `⚠️ ${error.message}\n${error.stack} ${errorTagTeam ? `\n\ncc/ @${errorTagTeam} ` : ''} ⚠️`)
   }
