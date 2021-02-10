@@ -1,2 +1,2 @@
-const { run } = require('action')
+const { run } = require('./action')
 run()
