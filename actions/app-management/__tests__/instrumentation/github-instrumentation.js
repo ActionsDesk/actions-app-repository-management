@@ -26,6 +26,26 @@ module.exports = {
       .query(params || true)
       .reply(200, interceptor)
   },
+  replyGetWith404: (path, interceptor) => {
+    nock(GITHUB_URL)
+      .get(path)
+      .reply(404, interceptor)
+  },
+  replyGithubPutResponse: (path, interceptor) => {
+    nock(GITHUB_URL)
+      .put(path)
+      .reply(200, interceptor)
+  },
+  replyGithubPatchResponse: (path, interceptor) => {
+    nock(GITHUB_URL)
+      .patch(path)
+      .reply(200, interceptor)
+  },
+  replyGitHubDeleteResponse: (path, interceptor) => {
+    nock(GITHUB_URL)
+      .delete(path)
+      .reply(200, interceptor)
+  },
   githubInstrumentationTeardown: () => {
     nock.cleanAll()
     nock.enableNetConnect()
@@ -35,7 +55,9 @@ module.exports = {
       payload
     }
   },
+  /* eslint-disable */
   getOctokit: () => {
-    return new github.GitHub('123456789')
+    return new github.getOctokit('123456789')
   }
+  /* eslint-enable */
 }

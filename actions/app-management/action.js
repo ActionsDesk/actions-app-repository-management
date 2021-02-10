@@ -55,47 +55,56 @@ function validateSettings (settings) {
   return { isValid: true }
 }
 
-async function validateApps(applications, knownApps, context, octokit){
+async function validateApps (applications, knownApps, orgName, context, octokit) {
   // Loop through the supplied applications and get the matching ids
   // ensure we track both name and id so that the comments can be descriptive
   // Add a comment if we can't find an application id for an entry
   // Fail and close if no valid applications supplied
-  let appDetails = {}
+  const { data: installedApps } = await octokit.orgs.listAppInstallations({
+    org: orgName
+  })
+  // Index the apps by name
+  const installedAppMap = installedApps.installations.reduce((acc, installation) => {
+    acc[installation.app_slug] = installation
+    return acc
+  }, {})
+  const appDetails = {}
   for (const application of applications) {
     for (const knownApp of knownApps.GitHubApps) {
-      if (knownApp.name.localeCompare(application, undefined, { sensitivity: 'base' }) === 0) {
-        appDetails[application] = knownApp.id
+      const isValidApp = installedAppMap[application] && installedAppMap[application].repository_selection === 'partial'
+      if (knownApp.name.localeCompare(application, undefined, { sensitivity: 'base' }) === 0 && isValidApp) {
+        appDetails[application] = installedAppMap[application].id
         break
       }
     }
 
     if (!(application in appDetails)) {
-      await utils.commentIssue(context, octokit, `⚠️ ${application} is not a valid Refinitiv GitHub Application. Repositories will not be added to this application.`)
+      await utils.commentIssue(context, octokit, `⚠️ ${application} is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories`)
     }
   }
   return appDetails
 }
 
-async function validateRepositories(repositories, orgName, author, context, octokit) {
-  let repositoryDetails = {}
+async function validateRepositories (repositories, orgName, author, context, octokit) {
+  const repositoryDetails = {}
 
   // Loop through all the repositories and get the repo details and user permissions
   for (const repositoryName of repositories) {
     try {
-      const repository = await octokit.repos.get({
+      const { data: repository } = await octokit.repos.get({
         owner: orgName,
         repo: repositoryName
       })
 
-      if (typeof repository.data.id !== 'undefined') {
-        repositoryDetails[repositoryName] = repository.data.id
+      if (typeof repository.id !== 'undefined') {
+        repositoryDetails[repositoryName] = repository.id
       }
     } catch (error) {
       if (error.status === 404) {
         await utils.commentIssue(context, octokit, `${repositoryName} is not a valid repository. Please ensure that you provide a valid repository name.`)
         continue
       }
-      await utils.commentIssue(context, octokit,`Error getting details for repository ${repositoryName}.`)
+      await utils.commentIssue(context, octokit, `Error getting details for repository ${repositoryName}.`)
       continue
     }
 
@@ -115,21 +124,24 @@ async function validateRepositories(repositories, orgName, author, context, octo
       delete repositoryDetails[repositoryName]
     }
   }
+  return repositoryDetails
 }
 
-async function executeAction(context, adminToken, errorTagTeam){
+async function executeAction (context, adminToken, errorTagTeam) {
   const orgName = context.payload.organization.login
-  const octokit = new github.GitHub(adminToken)
+  /*eslint-disable */
+  const octokit = new github.getOctokit(adminToken)
+  /* eslint-enable */
   const author = context.payload.issue.user.login
   core.info(`Issue opened by ${author} on ${orgName}`)
   try {
     // Parse action to execute
-    let action = await getActionFromTitle(context.payload.issue.title, context, octokit)
-    if (!action) return
+    const action = await getActionFromTitle(context.payload.issue.title, context, octokit)
+    if (action === actions.INVALID) return
     core.info(`Action - Executing ${action} on ${orgName}`)
 
     // Parse acton settings
-    let settings = await parseIssueBody(context.payload.issue.body, context, octokit)
+    const settings = await parseIssueBody(context.payload.issue.body, context, octokit)
     if (!settings) return
     core.info(`Settings - ${JSON.stringify(settings)}`)
 
@@ -140,25 +152,30 @@ async function executeAction(context, adminToken, errorTagTeam){
       return
     }
 
-    const configuration = await octokit.repos.getContents({
-      owner: context.payload.repository.owner.login,
-      repo: context.payload.repository.name,
-      path: 'githubapps.json'
-    })
-    const buffer = Buffer.from(configuration.data.content, 'base64')
-    const knownApps = JSON.parse(buffer.toString('utf-8'))
-
-    core.info(`Known apps - ${JSON.stringify(knownApps)}`)
+    let knownApps = null
+    try {
+      const configuration = await octokit.repos.getContent({
+        owner: context.payload.repository.owner.login,
+        repo: context.payload.repository.name,
+        path: 'githubapps.json'
+      })
+      const buffer = Buffer.from(configuration.data.content, 'base64')
+      knownApps = JSON.parse(buffer.toString('utf-8'))
+      core.info(`Known apps - ${JSON.stringify(knownApps)}`)
+    } catch (e) {
+      await utils.reportError(context, core, octokit, '⚠️ The token used in the integration is not correctly setup and cannot access the githubapps.json file')
+      return
+    }
 
     // Validate apps provided
-    const applicationDetails = await validateApps(settings['GitHub Application'], knownApps, context, octokit)
+    const applicationDetails = await validateApps(settings['GitHub Application'], knownApps, orgName, context, octokit)
     if (Object.keys(applicationDetails).length === 0) {
       await utils.reportError(context, core, octokit, '⚠️ No valid Refinitiv GitHub Applications provided. Please confirm the application names supplied are correct.')
       return
     }
     core.info(`Valid apps - ${JSON.stringify(applicationDetails)}`)
 
-    //Validate repositories provided
+    // Validate repositories provided
     const repositoryDetails = await validateRepositories(settings['Repository Name'], orgName, author, context, octokit)
     if (Object.keys(repositoryDetails).length === 0) {
       await utils.reportError(context, core, octokit, '⚠️ No valid Refinitiv repositories have been provided.')
@@ -178,7 +195,7 @@ async function executeAction(context, adminToken, errorTagTeam){
                   previews: ['machine-man']
                 }
               })
-              await utils.commentIssue(context, `${repository} has been added to the application ${application}.`)
+              await utils.commentIssue(context, octokit, `${repository} has been added to the application ${application}.`)
               break
             case actions.REMOVEFROMAPP:
               await octokit.apps.removeRepoFromInstallation({
@@ -188,16 +205,16 @@ async function executeAction(context, adminToken, errorTagTeam){
                   previews: ['machine-man']
                 }
               })
-              await utils.commentIssue(context, `${repository} has been removed from the application ${application}.`)
+              await utils.commentIssue(context, octokit, `${repository} has been removed from the application ${application}.`)
               break
           }
         } catch (error) {
-          await utils.commentIssue(context, `Error configuring ${repository} with the GitHub App ${application}.`)
+          await utils.commentIssue(context, octokit, `Error configuring ${repository} with the GitHub App ${application}.`)
         }
       }
     }
   } catch (error) {
-    await utils.reportError(context, core, octokit, `⚠️ ${error.message}\n${error.stack} ${errorTagTeam ? `\n\ncc/ @${errorTagTeam} `: ''} ⚠️`)
+    await utils.reportError(context, core, octokit, `⚠️ ${error.message}\n${error.stack} ${errorTagTeam ? `\n\ncc/ @${errorTagTeam} ` : ''} ⚠️`)
   }
 }
 
@@ -211,9 +228,6 @@ async function run () {
 module.exports = {
   run,
   executeAction,
-  parseIssueBody,
-  getActionFromTitle,
-  validateSettings,
   validateApps,
-  validateRepositories,
+  validateRepositories
 }

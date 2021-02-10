@@ -25,7 +25,7 @@
   "homepage": "https://github.com/rft/sdlc-appmanagement",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "@actions/github": "^2.1.1",
+    "@actions/github": "^4.0.0",
     "yaml": "^1.9.2"
   },
   "devDependencies": {

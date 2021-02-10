@@ -1,0 +1,18 @@
+{
+  "name": "githubapps.json",
+  "path": "githubapps.json",
+  "sha": "e749d5e6a11e9469d582a3952591e68d7127eb75",
+  "size": 96,
+  "url": "https://api.github.com/repos/refinitiv-org/rft-admin-support/contents/githubapps.json?ref=main",
+  "html_url": "https://github.com/refinitiv-org/rft-admin-support/blob/main/githubapps.json",
+  "git_url": "https://api.github.com/repos/refinitiv-org/rft-admin-support/git/blobs/e749d5e6a11e9469d582a3952591e68d7127eb75",
+  "download_url": "https://raw.githubusercontent.com/refinitiv-org/rft-admin-support/main/githubapps.json?token=AAQLNO2DDPTCTEF7NQ5YQHLAEPFOY",
+  "type": "file",
+  "content": "ewogICJHaXRIdWJBcHBzIjogWwogICAgewogICAgICAibmFtZSI6ICJ0ZXN0LTEiCiAgICB9LAogICAgewogICAgICAibmFtZSI6ICJ0ZXN0LTIiCiAgICB9LAogICAgewogICAgICAibmFtZSI6ICJ0ZXN0LTIiCiAgICB9CiAgXQp9Cg==",
+  "encoding": "base64",
+  "_links": {
+    "self": "https://api.github.com/repos/refinitiv-org/rft-admin-support/contents/githubapps.json?ref=main",
+    "git": "https://api.github.com/repos/refinitiv-org/rft-admin-support/git/blobs/e749d5e6a11e9469d582a3952591e68d7127eb75",
+    "html": "https://github.com/refinitiv-org/rft-admin-support/blob/main/githubapps.json"
+  }
+}

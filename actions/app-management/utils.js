@@ -58,5 +58,5 @@ async function closeIssue (context, octokit) {
 module.exports = {
   commentAndCloseIssue,
   reportError,
-  commentIssue,
+  commentIssue
 }
