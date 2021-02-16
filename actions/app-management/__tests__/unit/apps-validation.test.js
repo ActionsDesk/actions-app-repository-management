@@ -21,7 +21,7 @@ describe('GitHub apps test', () => {
   })
 
   function mockInstallations (mockCallback, validation) {
-    replyGithubGetResponse('/orgs/refinitiv-org/installations', null, (_, input) => {
+    replyGithubGetResponse('/orgs/github/installations', null, (_, input) => {
       if (mockCallback) mockCallback()
       if (validation) validation(input)
       return appInstallationsMock
@@ -30,7 +30,7 @@ describe('GitHub apps test', () => {
 
   test('that app details for a right app selected get retrieved', async () => {
     const apps = ['test-1']
-    const orgName = 'refinitiv-org'
+    const orgName = 'github'
     const context = getContext(issueOpenedMock)
     const octokit = getOctokit()
     mockInstallations()
@@ -42,13 +42,13 @@ describe('GitHub apps test', () => {
   test('that non-valid apps write a comment', async () => {
     const mockCallback = jest.fn()
     const apps = ['invalidApp']
-    const orgName = 'refinitiv-org'
+    const orgName = 'github'
     const context = getContext(issueOpenedMock)
     const octokit = getOctokit()
     mockInstallations()
-    replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
+    replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
-      expect(input.body).toBe('⚠️ **invalidApp** is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories')
+      expect(input.body).toBe('⚠️ **invalidApp** is not a valid GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories')
     })
     const validApps = await validateApps(apps, githubapps, orgName, context, octokit)
     expect(validApps).toStrictEqual({})
@@ -57,7 +57,7 @@ describe('GitHub apps test', () => {
 
   test('that multiple valid apps pass the validation', async () => {
     const apps = ['test-1', 'test-2']
-    const orgName = 'refinitiv-org'
+    const orgName = 'github'
     const context = getContext(issueOpenedMock)
     const octokit = getOctokit()
     mockInstallations()
@@ -72,13 +72,13 @@ describe('GitHub apps test', () => {
   test('that mixed correct and incorrect apps only provide the valid ones', async () => {
     const mockCallback = jest.fn()
     const apps = ['test-1', 'invalidApp']
-    const orgName = 'refinitiv-org'
+    const orgName = 'github'
     const context = getContext(issueOpenedMock)
     const octokit = getOctokit()
     // mockInstallations()
-    replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
+    replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
-      expect(input.body).toBe('⚠️ **invalidApp** is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories')
+      expect(input.body).toBe('⚠️ **invalidApp** is not a valid GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories')
     })
     mockInstallations()
     const validApps = await validateApps(apps, githubapps, orgName, context, octokit)
@@ -90,7 +90,7 @@ describe('GitHub apps test', () => {
 
   test('that empty apps produce an empty result', async () => {
     const apps = []
-    const orgName = 'refinitiv-org'
+    const orgName = 'github'
     const context = getContext(issueOpenedMock)
     const octokit = getOctokit()
     mockInstallations()
@@ -101,13 +101,13 @@ describe('GitHub apps test', () => {
   test('that apps need to have partial access to be valid', async () => {
     const mockCallback = jest.fn()
     const apps = ['test-3']
-    const orgName = 'refinitiv-org'
+    const orgName = 'github'
     const context = getContext(issueOpenedMock)
     const octokit = getOctokit()
     mockInstallations(mockCallback)
-    replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
+    replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
-      expect(input.body).toBe('⚠️ **test-3** is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories')
+      expect(input.body).toBe('⚠️ **test-3** is not a valid GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories')
     })
     const validApps = await validateApps(apps, githubapps, orgName, context, octokit)
     expect(validApps).toStrictEqual({})

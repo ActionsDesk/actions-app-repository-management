@@ -25,17 +25,17 @@ describe('GitHub apps test', () => {
 
   test('that valid repositories with admin permissions come as result of the data', async () => {
     const mockCallback = jest.fn()
-    const repoName = ['refinitiv-docs']
+    const repoName = ['actions-app-repository-management-test']
     const repos = [repoName]
-    const orgName = 'refinitiv-org'
+    const orgName = 'github'
     const author = 'droidpl'
     const context = getContext(issueOpenedMock)
     const octokit = getOctokit()
-    replyGithubGetResponse(`/repos/refinitiv-org/${repoName}`, null, () => {
+    replyGithubGetResponse(`/repos/github/${repoName}`, null, () => {
       mockCallback()
       return repositoryMock
     })
-    replyGithubGetResponse(`/repos/refinitiv-org/${repoName}/collaborators/${author}/permission`, null, () => {
+    replyGithubGetResponse(`/repos/github/${repoName}/collaborators/${author}/permission`, null, () => {
       mockCallback()
       return repositoryPermissionAdminMock
     })
@@ -46,13 +46,13 @@ describe('GitHub apps test', () => {
 
   test('that unexpected error getting the repository writes a comment', async () => {
     const mockCallback = jest.fn()
-    const repoName = ['refinitiv-docs']
+    const repoName = ['actions-app-repository-management-test']
     const repos = [repoName]
-    const orgName = 'refinitiv-org'
+    const orgName = 'github'
     const author = 'droidpl'
     const context = getContext(issueOpenedMock)
     const octokit = getOctokit()
-    replyGithubResponse(`/repos/${orgName}/rft-admin-support/issues/1/comments`, (_, input) => {
+    replyGithubResponse(`/repos/${orgName}/actions-app-repository-management/issues/1/comments`, (_, input) => {
       mockCallback()
       expect(input.body).toBe(`Error getting details for repository **${repoName}**.`)
     })
@@ -63,17 +63,17 @@ describe('GitHub apps test', () => {
 
   test('that repositories that do not exist cannot be used', async () => {
     const mockCallback = jest.fn()
-    const repoName = ['refinitiv-docs']
+    const repoName = ['actions-app-repository-management-test']
     const repos = [repoName]
-    const orgName = 'refinitiv-org'
+    const orgName = 'github'
     const author = 'droidpl'
     const context = getContext(issueOpenedMock)
     const octokit = getOctokit()
-    replyGetWith404(`/repos/refinitiv-org/${repoName}`, () => {
+    replyGetWith404(`/repos/github/${repoName}`, () => {
       mockCallback()
       return repository404Mock
     })
-    replyGithubResponse(`/repos/${orgName}/rft-admin-support/issues/1/comments`, (_, input) => {
+    replyGithubResponse(`/repos/${orgName}/actions-app-repository-management/issues/1/comments`, (_, input) => {
       mockCallback()
       expect(input.body).toBe(`**${repoName}** is not a valid repository. Please ensure that you provide a valid repository name.`)
     })
@@ -84,21 +84,21 @@ describe('GitHub apps test', () => {
 
   test('that users need to be admin to interact with the repository', async () => {
     const mockCallback = jest.fn()
-    const repoName = ['refinitiv-docs']
+    const repoName = ['actions-app-repository-management-test']
     const repos = [repoName]
-    const orgName = 'refinitiv-org'
+    const orgName = 'github'
     const author = 'droidpl'
     const context = getContext(issueOpenedMock)
     const octokit = getOctokit()
-    replyGithubGetResponse(`/repos/refinitiv-org/${repoName}`, null, () => {
+    replyGithubGetResponse(`/repos/github/${repoName}`, null, () => {
       mockCallback()
       return repositoryMock
     })
-    replyGithubGetResponse(`/repos/refinitiv-org/${repoName}/collaborators/${author}/permission`, null, () => {
+    replyGithubGetResponse(`/repos/github/${repoName}/collaborators/${author}/permission`, null, () => {
       mockCallback()
       return repositoryPermissionReadMock
     })
-    replyGithubResponse(`/repos/${orgName}/rft-admin-support/issues/1/comments`, (_, input) => {
+    replyGithubResponse(`/repos/${orgName}/actions-app-repository-management/issues/1/comments`, (_, input) => {
       mockCallback()
       expect(input.body).toBe(`Only repository admins can request for a repository to be added to a GitHub App. **${repoName}** will not be processed.`)
     })
@@ -109,17 +109,17 @@ describe('GitHub apps test', () => {
 
   test('that an error checking the permissions writes a comment', async () => {
     const mockCallback = jest.fn()
-    const repoName = ['refinitiv-docs']
+    const repoName = ['actions-app-repository-management-test']
     const repos = [repoName]
-    const orgName = 'refinitiv-org'
+    const orgName = 'github'
     const author = 'droidpl'
     const context = getContext(issueOpenedMock)
     const octokit = getOctokit()
-    replyGithubGetResponse(`/repos/refinitiv-org/${repoName}`, null, () => {
+    replyGithubGetResponse(`/repos/github/${repoName}`, null, () => {
       mockCallback()
       return repositoryMock
     })
-    replyGithubResponse(`/repos/${orgName}/rft-admin-support/issues/1/comments`, (_, input) => {
+    replyGithubResponse(`/repos/${orgName}/actions-app-repository-management/issues/1/comments`, (_, input) => {
       mockCallback()
       expect(input.body).toBe(`Error getting the repository permissions for **${repoName}**.`)
     })
@@ -130,7 +130,7 @@ describe('GitHub apps test', () => {
 
   test('that empty repositories provide empty validations', async () => {
     const repos = []
-    const orgName = 'refinitiv-org'
+    const orgName = 'github'
     const author = 'droidpl'
     const context = getContext(issueOpenedMock)
     const octokit = getOctokit()

@@ -10958,7 +10958,7 @@ async function validateApps (applications, knownApps, orgName, context, octokit)
     }
 
     if (!(appMap in appDetails)) {
-      await utils.commentIssue(context, octokit, `⚠️ **${application}** is not a valid Refinitiv GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories`)
+      await utils.commentIssue(context, octokit, `⚠️ **${application}** is not a valid GitHub Application. Repositories will not be added to this application. App needs to be installed in the org and have access to specific repositories`)
     }
   }
   core.info(`Final app details - ${JSON.stringify(appDetails)}`)
@@ -11050,7 +11050,7 @@ async function executeAction (context, adminToken, errorTagTeam) {
     // Validate apps provided
     const applicationDetails = await validateApps(settings['GitHub Application'], knownApps, orgName, context, octokit)
     if (Object.keys(applicationDetails).length === 0) {
-      await utils.reportError(context, core, octokit, '⚠️ No valid Refinitiv GitHub Applications provided. Please confirm the application names supplied are correct.')
+      await utils.reportError(context, core, octokit, '⚠️ No valid GitHub Applications provided. Please confirm the application names supplied are correct.')
       return
     }
     core.info(`Valid apps - ${JSON.stringify(applicationDetails)}`)
@@ -11058,7 +11058,7 @@ async function executeAction (context, adminToken, errorTagTeam) {
     // Validate repositories provided
     const repositoryDetails = await validateRepositories(settings['Repository Name'], orgName, author, context, octokit)
     if (Object.keys(repositoryDetails).length === 0) {
-      await utils.reportError(context, core, octokit, '⚠️ No valid Refinitiv repositories have been provided.')
+      await utils.reportError(context, core, octokit, '⚠️ No valid repositories have been provided.')
       return
     }
     core.info(`Valid repos - ${JSON.stringify(repositoryDetails)}`)

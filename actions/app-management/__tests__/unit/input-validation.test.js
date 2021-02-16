@@ -19,10 +19,10 @@ describe('GitHub apps test', () => {
   })
 
   function lockedIssueValidationMock (mockCallback) {
-    replyGithubPutResponse('/repos/refinitiv-org/rft-admin-support/issues/1/lock', (_, input) => {
+    replyGithubPutResponse('/repos/github/actions-app-repository-management/issues/1/lock', (_, input) => {
       if (mockCallback) mockCallback()
     })
-    replyGithubPatchResponse('/repos/refinitiv-org/rft-admin-support/issues/1', (_, input) => {
+    replyGithubPatchResponse('/repos/github/actions-app-repository-management/issues/1', (_, input) => {
       if (mockCallback) mockCallback()
       expect(input.state).toBe('closed')
     })
@@ -35,7 +35,7 @@ describe('GitHub apps test', () => {
     issueWithWrongTitle.issue.title = wrongTitle
     const context = getContext(issueWithWrongTitle)
     const adminToken = '123456'
-    replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
+    replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
       expect(input.body).toBe('⚠️ Invalid request raised. The issue templates are the only issues processed on this repository.')
     })
@@ -51,7 +51,7 @@ describe('GitHub apps test', () => {
     issueWithWrongYAML.issue.body = invalidYAML
     const context = getContext(issueWithWrongYAML)
     const adminToken = '123456'
-    replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
+    replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
       expect(input.body).toBe('⚠️ Unable to read request. Make sure you follow the template')
     })
@@ -66,13 +66,13 @@ describe('GitHub apps test', () => {
 Repository Name: 
 
 GitHub Application: 
-- droidpl-RFT-OAuth-Test
+- test-App
     `
     const issueWithWrongYAML = JSON.parse(JSON.stringify(issueOpenedMock))
     issueWithWrongYAML.issue.body = yamlWithoutRepos
     const context = getContext(issueWithWrongYAML)
     const adminToken = '123456'
-    replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
+    replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
       expect(input.body).toBe('⚠️ Missing repository name.')
     })
@@ -85,7 +85,7 @@ GitHub Application:
     const mockCallback = jest.fn()
     const yamlWithoutRepos = `
 Repository Name: 
-- refinitiv-docs
+- actions-app-repository-management-test
 
 GitHub Application: 
 
@@ -94,7 +94,7 @@ GitHub Application:
     issueWithWrongYAML.issue.body = yamlWithoutRepos
     const context = getContext(issueWithWrongYAML)
     const adminToken = '123456'
-    replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
+    replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
       expect(input.body).toBe('⚠️ Missing GitHub Application.')
     })
@@ -107,7 +107,7 @@ GitHub Application:
     const mockCallback = jest.fn()
     const context = getContext(issueOpenedMock)
     const adminToken = '123456'
-    replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
+    replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
       expect(input.body).toBe('⚠️ The token used in the integration is not correctly setup and cannot access the githubapps.json file')
     })

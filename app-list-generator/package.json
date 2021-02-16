@@ -9,18 +9,29 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rft/sdlc-appmanagement"
+    "url": "git+https://github.com/github/actions-app-repository-management"
   },
   "keywords": [
     "GitHub",
     "Actions",
     "JavaScript"
   ],
-  "author": "GitHub",
   "bugs": {
-    "url": "https://github.com/rft/sdlc-appmanagement"
+    "url": "https://github.com/github/actions-app-repository-management"
   },
-  "homepage": "https://github.com/rft/sdlc-appmanagement",
+  "author": {
+    "name": "GitHub Professional Services",
+    "email": "services@github.com",
+    "url": "https://services.github.com"
+  },
+  "contributors": [
+    {
+      "name": "Javier de Pedro López",
+      "email": "droidpl@github.com",
+      "url": "https://github.com/droidpl"
+    }
+  ],
+  "homepage": "https://github.com/github/actions-app-repository-management",
   "license": "MIT",
   "dependencies": {
     "@octokit/rest": "^18.1.1",

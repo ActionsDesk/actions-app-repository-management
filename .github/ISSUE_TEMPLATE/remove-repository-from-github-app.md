@@ -15,4 +15,4 @@ GitHub Application:
 - github-app-name
 
 
-#### Instructions available at [README.md](https://github.com/rft-dev/sdlc-appmanagement/blob/master/README.md#instructions)
+#### Instructions available at [README.md](https://github.com/github/actions-app-repository-management/blob/master/README.md#instructions)

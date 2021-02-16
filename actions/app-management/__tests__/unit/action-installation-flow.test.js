@@ -25,35 +25,35 @@ describe('GitHub apps test', () => {
   })
 
   function mockInstallations (mockCallback) {
-    replyGithubGetResponse('/orgs/refinitiv-org/installations', null, (_, input) => {
+    replyGithubGetResponse('/orgs/github/installations', null, (_, input) => {
       if (mockCallback) mockCallback()
       return appInstallationsMock
     })
   }
 
   function mockGitHubApps (mockCallback) {
-    replyGithubGetResponse('/repos/refinitiv-org/rft-admin-support/contents/githubapps.json', null, () => {
+    replyGithubGetResponse('/repos/github/actions-app-repository-management/contents/githubapps.json', null, () => {
       if (mockCallback) mockCallback()
       return contentsGitHubApp
     })
   }
 
   function mockRepositories (mockCallback) {
-    replyGithubGetResponse('/repos/refinitiv-org/refinitiv-docs', null, () => {
+    replyGithubGetResponse('/repos/github/actions-app-repository-management-test', null, () => {
       mockCallback()
       return repositoryMock
     })
-    replyGithubGetResponse('/repos/refinitiv-org/refinitiv-docs/collaborators/droidpl/permission', null, () => {
+    replyGithubGetResponse('/repos/github/actions-app-repository-management-test/collaborators/droidpl/permission', null, () => {
       mockCallback()
       return repositoryPermissionAdminMock
     })
   }
 
   function lockedIssueValidationMock (mockCallback) {
-    replyGithubPutResponse('/repos/refinitiv-org/rft-admin-support/issues/1/lock', (_, input) => {
+    replyGithubPutResponse('/repos/github/actions-app-repository-management/issues/1/lock', (_, input) => {
       if (mockCallback) mockCallback()
     })
-    replyGithubPatchResponse('/repos/refinitiv-org/rft-admin-support/issues/1', (_, input) => {
+    replyGithubPatchResponse('/repos/github/actions-app-repository-management/issues/1', (_, input) => {
       if (mockCallback) mockCallback()
       expect(input.state).toBe('closed')
     })
@@ -65,7 +65,7 @@ describe('GitHub apps test', () => {
     const issueWithAddTitle = JSON.parse(JSON.stringify(issueOpenedMock))
     const validReposYaml = `
 Repository Name: 
-- refinitiv-docs
+- actions-app-repository-management-test
 GitHub Application: 
 - test-1
     `
@@ -79,9 +79,9 @@ GitHub Application:
     replyGithubPutResponse('/user/installations/1/repositories/335909243', (_, input) => {
       mockCallback()
     })
-    replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
+    replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
-      expect(input.body).toBe('**refinitiv-docs** has been added to the application **test-1**.')
+      expect(input.body).toBe('**actions-app-repository-management-test** has been added to the application **test-1**.')
     })
     lockedIssueValidationMock(mockCallback)
     await executeAction(context, adminToken)
@@ -94,7 +94,7 @@ GitHub Application:
     const issueWithRemoveTitle = JSON.parse(JSON.stringify(issueOpenedMock))
     const validReposYaml = `
 Repository Name: 
-- refinitiv-docs
+- actions-app-repository-management-test
 GitHub Application: 
 - test-1
     `
@@ -108,9 +108,9 @@ GitHub Application:
     replyGitHubDeleteResponse('/user/installations/1/repositories/335909243', (_, input) => {
       mockCallback()
     })
-    replyGithubResponse('/repos/refinitiv-org/rft-admin-support/issues/1/comments', (_, input) => {
+    replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
-      expect(input.body).toBe('**refinitiv-docs** has been removed from the application **test-1**.')
+      expect(input.body).toBe('**actions-app-repository-management-test** has been removed from the application **test-1**.')
     })
     lockedIssueValidationMock(mockCallback)
     await executeAction(context, adminToken)

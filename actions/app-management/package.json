@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rft/sdlc-appmanagement"
+    "url": "git+https://github.com/github/actions-app-repository-management"
   },
   "keywords": [
     "GitHub",
@@ -20,9 +20,9 @@
   "author": "GitHub",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rft/sdlc-appmanagement"
+    "url": "https://github.com/github/actions-app-repository-management"
   },
-  "homepage": "https://github.com/rft/sdlc-appmanagement",
+  "homepage": "https://github.com/github/actions-app-repository-management",
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
