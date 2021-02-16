@@ -61,7 +61,6 @@ async function generateReadme(octokit, org, config) {
 
     //Get owner
     const owner = reducedConfig[application.app_slug] ? reducedConfig[application.app_slug].owner : null
-    console.log(JSON.stringify(reducedConfig))
 
     // Get permissions
     let permissions = ''
