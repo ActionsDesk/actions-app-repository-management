@@ -6,7 +6,7 @@
 | -------------------| ----------- | ----- | ----------- |
 | RFT-OAuth-Test     | Testing GitHub App User-to-server workflows | sdlc | - Issues (R/W)<br>- Metadata (R)<br>- Email Addresses (R)<br>- GPG keys (R)<br>- Git SSH Keys (R)<br>- Plan (R)|
 | rft-app-management | Managing which repositories can be accessed by approved GitHub Apps | sdlc | - Contents (R)<br>- Issues (RW)<br>- Metadata (R) | 
-
+g
 ## Instructions
 
 You can request that a repository is added to, or removed from, one of the approved GitHub Applications by [raising an issue](https://github.com/rft-dev/sdlc-appmanagement/issues) in this repository.  There are issue templates that you must use to get the action completed and you should ensure that you adhere to the following suggestions:
@@ -21,6 +21,7 @@ You can request that a repository is added to, or removed from, one of the appro
   - Do not try to change the issue after raised as it will not be actioned.
   - Once complete the issue will be locked and closed.
   - Any comments added to an issue will be ignored.
+
 
 ### Single Repository To GitHub Application example content
 

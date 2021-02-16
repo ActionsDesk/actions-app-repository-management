@@ -1,13 +1,19 @@
 {
   "GitHubApps": [
     {
-      "name": "test-1"
+      "name": "test-1",
+      "description": "Testing apps",
+      "owner": "droidpl"
     },
     {
-      "name": "test-2"
+      "name": "test-2",
+      "description": "Testing apps",
+      "owner": "droidpl"
     },
     {
-      "name": "test-2"
+      "name": "test-2",
+      "description": "Testing apps",
+      "owner": "droidpl"
     }
   ]
 }
