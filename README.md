@@ -63,3 +63,11 @@ GitHub Application:
 - github-app-name
 - github-app-name-two
 ```
+
+## Test the app
+
+The app contains tests that can be run with the following commands under `actions/app-management`:
+```bash
+npm install
+npm run test
+```
