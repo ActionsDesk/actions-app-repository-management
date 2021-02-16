@@ -2,7 +2,6 @@
   "GitHubApps": [
     {
       "name": "droidpl-RFT-OAuth-Test",
-      "description": "Testing GitHub App User-to-server workflows\t",
       "owner": "droidpl"
     }
   ]
