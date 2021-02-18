@@ -7,7 +7,7 @@ const validate = require('validate.js')
 
 function validateInput(program) {
   const parsed = {
-    token: program.token,
+    token: program.token || process.env.TOKEN,
     org: program.org
   }
 
