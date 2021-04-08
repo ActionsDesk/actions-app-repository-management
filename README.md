@@ -35,7 +35,7 @@ There are issue templates that you must use to get the action completed and you 
 - Clone this repository and change the documentation to fit the customer needs
 - Change the content of the file `githubapps.json` to contain the GitHub apps that you want to manage
 - Edit the templates in [ISSUE_TEMPLATE](./.github/ISSUE_TEMPLATE) to fit the policies required
-- Add the secret `PAT` to the GitHub actions secret
+- Add the secret `PAT` to the GitHub actions secret with org:admin scope
 - Test that the workflows are workign as expected
 
 > This repository requires `PAT` machine account authentication since the repository addition/deletion from the GitHub apps

@@ -15,8 +15,11 @@ const appInstallationsMock = require('../fixtures/mock/app-installations')
 const repositoryMock = require('../fixtures/mock/repository')
 const repositoryPermissionAdminMock = require('../fixtures/mock/repository-permission-admin')
 
+jest.mock('fs')
+const fs = require('fs')
 describe('GitHub apps test', () => {
   beforeEach(() => {
+    fs.readFileSync.mockClear()
     githubInstrumentation()
   })
 
@@ -32,10 +35,9 @@ describe('GitHub apps test', () => {
   }
 
   function mockGitHubApps (mockCallback) {
-    replyGithubGetResponse('/repos/github/actions-app-repository-management/contents/githubapps.json', null, () => {
-      if (mockCallback) mockCallback()
-      return contentsGitHubApp
-    })
+    // clear any previous calls
+    fs.writeFileSync.mockClear()
+    fs.readFileSync.mockReturnValue(JSON.stringify(contentsGitHubApp))
   }
 
   function mockRepositories (mockCallback) {
@@ -73,7 +75,8 @@ GitHub Application:
     issueWithAddTitle.issue.body = validReposYaml
     const context = getContext(issueWithAddTitle)
     const adminToken = '123456'
-    mockGitHubApps(mockCallback)
+    const localToken = 'local-123456'
+    mockGitHubApps()
     mockInstallations(mockCallback)
     mockRepositories(mockCallback)
     replyGithubPutResponse('/user/installations/1/repositories/335909243', (_, input) => {
@@ -81,11 +84,11 @@ GitHub Application:
     })
     replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
-      expect(input.body).toBe('**actions-app-repository-management-test** has been added to the application **test-1**.')
+      expect(input.body).toBe('✅ **actions-app-repository-management-test** has been added to the application **test-1**.')
     })
     lockedIssueValidationMock(mockCallback)
-    await executeAction(context, adminToken)
-    expect(mockCallback.mock.calls.length).toBe(8)
+    await executeAction(context, localToken, adminToken)
+    expect(mockCallback.mock.calls.length).toBe(7)
   })
 
   test('that the installation gets removed from the repository', async () => {
@@ -102,7 +105,8 @@ GitHub Application:
     issueWithRemoveTitle.issue.body = validReposYaml
     const context = getContext(issueWithRemoveTitle)
     const adminToken = '123456'
-    mockGitHubApps(mockCallback)
+    const localToken = 'local-123456'
+    mockGitHubApps()
     mockInstallations(mockCallback)
     mockRepositories(mockCallback)
     replyGitHubDeleteResponse('/user/installations/1/repositories/335909243', (_, input) => {
@@ -110,10 +114,10 @@ GitHub Application:
     })
     replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
-      expect(input.body).toBe('**actions-app-repository-management-test** has been removed from the application **test-1**.')
+      expect(input.body).toBe('✅ **actions-app-repository-management-test** has been removed from the application **test-1**.')
     })
     lockedIssueValidationMock(mockCallback)
-    await executeAction(context, adminToken)
-    expect(mockCallback.mock.calls.length).toBe(8)
+    await executeAction(context, localToken, adminToken)
+    expect(mockCallback.mock.calls.length).toBe(7)
   })
 })

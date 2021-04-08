@@ -57,7 +57,10 @@ module.exports = {
   },
   /* eslint-disable */
   getOctokit: () => {
-    return new github.getOctokit('123456789')
+    return {
+      adminOctokit: new github.getOctokit('123456789'),
+      actionsOctokit: new github.getOctokit('123456789')
+    }
   }
   /* eslint-enable */
 }

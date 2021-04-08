@@ -54,7 +54,7 @@ describe('GitHub apps test', () => {
     const octokit = getOctokit()
     replyGithubResponse(`/repos/${orgName}/actions-app-repository-management/issues/1/comments`, (_, input) => {
       mockCallback()
-      expect(input.body).toBe(`Error getting details for repository **${repoName}**.`)
+      expect(input.body).toBe(`⚠️ Error getting details for repository **${repoName}**.`)
     })
     const repositoryDetails = await validateRepositories(repos, orgName, author, context, octokit)
     expect(repositoryDetails).toStrictEqual({})
@@ -75,7 +75,7 @@ describe('GitHub apps test', () => {
     })
     replyGithubResponse(`/repos/${orgName}/actions-app-repository-management/issues/1/comments`, (_, input) => {
       mockCallback()
-      expect(input.body).toBe(`**${repoName}** is not a valid repository. Please ensure that you provide a valid repository name.`)
+      expect(input.body).toBe(`⚠️ **${repoName}** is not a valid repository. Please ensure that you provide a valid repository name.`)
     })
     const repositoryDetails = await validateRepositories(repos, orgName, author, context, octokit)
     expect(repositoryDetails).toStrictEqual({})
@@ -100,7 +100,7 @@ describe('GitHub apps test', () => {
     })
     replyGithubResponse(`/repos/${orgName}/actions-app-repository-management/issues/1/comments`, (_, input) => {
       mockCallback()
-      expect(input.body).toBe(`Only repository admins can request for a repository to be added to a GitHub App. **${repoName}** will not be processed.`)
+      expect(input.body).toBe(`⚠️ Only repository admins can request for a repository to be added to a GitHub App. **${repoName}** will not be processed.`)
     })
     const repositoryDetails = await validateRepositories(repos, orgName, author, context, octokit)
     expect(repositoryDetails).toStrictEqual({})
@@ -121,7 +121,7 @@ describe('GitHub apps test', () => {
     })
     replyGithubResponse(`/repos/${orgName}/actions-app-repository-management/issues/1/comments`, (_, input) => {
       mockCallback()
-      expect(input.body).toBe(`Error getting the repository permissions for **${repoName}**.`)
+      expect(input.body).toBe(`⚠️ Error getting the repository permissions for **${repoName}**.`)
     })
     const repositoryDetails = await validateRepositories(repos, orgName, author, context, octokit)
     expect(repositoryDetails).toStrictEqual({})

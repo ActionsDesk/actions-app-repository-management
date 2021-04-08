@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "standard --fix",
     "pack": "ncc build index.js -o dist",
-    "test": "jest *.test.js && standard"
+    "test": "jest && standard"
   },
   "repository": {
     "type": "git",

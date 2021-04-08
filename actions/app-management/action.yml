@@ -4,6 +4,10 @@ inputs:
   admin_token:
     description: Admin token with access to the organization
     required: true
+  token:
+    description: The GitHub actions token
+    required: true
+    default: ${{ github.token }}
   error_tag_team:
     description: Team to be tagged in case an error is produced
     required: false

@@ -9,9 +9,13 @@ const {
 } = require('../instrumentation/github-instrumentation')
 const issueOpenedMock = require('../fixtures/mock/issue-opened')
 
+jest.mock('fs')
+const fs = require('fs')
+
 describe('GitHub apps test', () => {
   beforeEach(() => {
     githubInstrumentation()
+    fs.readFileSync.mockClear()
   })
 
   afterEach(() => {
@@ -35,12 +39,13 @@ describe('GitHub apps test', () => {
     issueWithWrongTitle.issue.title = wrongTitle
     const context = getContext(issueWithWrongTitle)
     const adminToken = '123456'
+    const localToken = 'local-123456'
     replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
       expect(input.body).toBe('⚠️ Invalid request raised. The issue templates are the only issues processed on this repository.')
     })
     lockedIssueValidationMock(mockCallback)
-    await executeAction(context, adminToken)
+    await executeAction(context, localToken, adminToken)
     expect(mockCallback.mock.calls.length).toBe(3)
   })
 
@@ -51,12 +56,13 @@ describe('GitHub apps test', () => {
     issueWithWrongYAML.issue.body = invalidYAML
     const context = getContext(issueWithWrongYAML)
     const adminToken = '123456'
+    const localToken = 'local-123456'
     replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
       expect(input.body).toBe('⚠️ Unable to read request. Make sure you follow the template')
     })
     lockedIssueValidationMock(mockCallback)
-    await executeAction(context, adminToken)
+    await executeAction(context, localToken, adminToken)
     expect(mockCallback.mock.calls.length).toBe(3)
   })
 
@@ -72,12 +78,13 @@ GitHub Application:
     issueWithWrongYAML.issue.body = yamlWithoutRepos
     const context = getContext(issueWithWrongYAML)
     const adminToken = '123456'
+    const localToken = 'local-123456'
     replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
       expect(input.body).toBe('⚠️ Missing repository name.')
     })
     lockedIssueValidationMock(mockCallback)
-    await executeAction(context, adminToken)
+    await executeAction(context, localToken, adminToken)
     expect(mockCallback.mock.calls.length).toBe(3)
   })
 
@@ -94,25 +101,30 @@ GitHub Application:
     issueWithWrongYAML.issue.body = yamlWithoutRepos
     const context = getContext(issueWithWrongYAML)
     const adminToken = '123456'
+    const localToken = 'local-123456'
     replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
       expect(input.body).toBe('⚠️ Missing GitHub Application.')
     })
     lockedIssueValidationMock(mockCallback)
-    await executeAction(context, adminToken)
+    await executeAction(context, localToken, adminToken)
     expect(mockCallback.mock.calls.length).toBe(3)
   })
 
-  test('that failed request on githubapps.json produces an error', async () => {
+  test('that faling to load githubapps.json produces an error', async () => {
     const mockCallback = jest.fn()
     const context = getContext(issueOpenedMock)
     const adminToken = '123456'
+    const localToken = 'local-123456'
     replyGithubResponse('/repos/github/actions-app-repository-management/issues/1/comments', (_, input) => {
       mockCallback()
-      expect(input.body).toBe('⚠️ The token used in the integration is not correctly setup and cannot access the githubapps.json file')
+      expect(input.body).toBe('⚠️ The githubapps.json file is not available on the actions directory')
     })
     lockedIssueValidationMock(mockCallback)
-    await executeAction(context, adminToken)
+    fs.readFileSync.mockImplementation(() => {
+      throw new Error()
+    })
+    await executeAction(context, localToken, adminToken)
     expect(mockCallback.mock.calls.length).toBe(3)
   })
 })
