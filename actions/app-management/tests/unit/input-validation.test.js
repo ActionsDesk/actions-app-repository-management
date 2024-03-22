@@ -9,7 +9,13 @@ const {
 } = require('../instrumentation/github-instrumentation')
 const issueOpenedMock = require('../fixtures/mock/issue-opened')
 
-jest.mock('fs')
+jest.mock('fs', () => ({
+  promises: {
+    access: jest.fn()
+  },
+  readFileSync: jest.fn(),
+  writeFileSync: jest.fn(),
+}));
 const fs = require('fs')
 
 describe('GitHub apps test', () => {
@@ -69,9 +75,9 @@ describe('GitHub apps test', () => {
   test('that a yaml without repositories sends an error', async () => {
     const mockCallback = jest.fn()
     const yamlWithoutRepos = `
-Repository Name: 
+Repository Name:
 
-GitHub Application: 
+GitHub Application:
 - test-App
     `
     const issueWithWrongYAML = JSON.parse(JSON.stringify(issueOpenedMock))
@@ -91,10 +97,10 @@ GitHub Application:
   test('that a yaml without app details sends an error', async () => {
     const mockCallback = jest.fn()
     const yamlWithoutRepos = `
-Repository Name: 
+Repository Name:
 - actions-app-repository-management-test
 
-GitHub Application: 
+GitHub Application:
 
     `
     const issueWithWrongYAML = JSON.parse(JSON.stringify(issueOpenedMock))

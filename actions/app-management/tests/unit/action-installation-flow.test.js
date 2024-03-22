@@ -15,8 +15,15 @@ const appInstallationsMock = require('../fixtures/mock/app-installations')
 const repositoryMock = require('../fixtures/mock/repository')
 const repositoryPermissionAdminMock = require('../fixtures/mock/repository-permission-admin')
 
-jest.mock('fs')
+jest.mock('fs', () => ({
+  promises: {
+    access: jest.fn()
+  },
+  readFileSync: jest.fn(),
+  writeFileSync: jest.fn(),
+}));
 const fs = require('fs')
+
 describe('GitHub apps test', () => {
   beforeEach(() => {
     fs.readFileSync.mockClear()
@@ -66,9 +73,9 @@ describe('GitHub apps test', () => {
     const addTitle = 'Add Repository To GitHub App'
     const issueWithAddTitle = JSON.parse(JSON.stringify(issueOpenedMock))
     const validReposYaml = `
-Repository Name: 
+Repository Name:
 - actions-app-repository-management-test
-GitHub Application: 
+GitHub Application:
 - test-1
     `
     issueWithAddTitle.issue.title = addTitle
@@ -96,9 +103,9 @@ GitHub Application:
     const removeTitle = 'Remove Repository From GitHub App'
     const issueWithRemoveTitle = JSON.parse(JSON.stringify(issueOpenedMock))
     const validReposYaml = `
-Repository Name: 
+Repository Name:
 - actions-app-repository-management-test
-GitHub Application: 
+GitHub Application:
 - test-1
     `
     issueWithRemoveTitle.issue.title = removeTitle
